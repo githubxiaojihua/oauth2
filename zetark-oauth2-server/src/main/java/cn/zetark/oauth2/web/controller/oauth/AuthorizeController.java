@@ -51,16 +51,18 @@ public class AuthorizeController {
 
         try {
 
-            //构建OAuth 授权请求
+            //1、构建OAuth 授权请求
             OAuthAuthzRequest oauthRequest = new OAuthAuthzRequest(request);
 
-            //检查传入的客户端id是否正确
+            //2、检查传入的客户端id是否正确，如果不正确则返回相应错误提示
             if (!oAuthService.checkClientId(oauthRequest.getClientId())) {
+                //2.1 构建错误响应信息，其中errorResponse是响应码，剩下的是response body部分。
                 OAuthResponse response =
                         OAuthASResponse.errorResponse(HttpServletResponse.SC_BAD_REQUEST)
                                 .setError(OAuthError.TokenResponse.INVALID_CLIENT)
                                 .setErrorDescription(Constants.INVALID_CLIENT_ID)
                                 .buildJSONMessage();
+                //通过response.getBody可以获取设置的信息，返回的是json字符串
                 return new ResponseEntity(response.getBody(), HttpStatus.valueOf(response.getResponseStatus()));
             }
 
@@ -76,12 +78,14 @@ public class AuthorizeController {
             //responseType目前仅支持CODE，另外还有TOKEN
             String responseType = oauthRequest.getParam(OAuth.OAUTH_RESPONSE_TYPE);
             if (responseType.equals(ResponseType.CODE.toString())) {
+                //3、具体生成授权码的API
                 OAuthIssuerImpl oauthIssuerImpl = new OAuthIssuerImpl(new MD5Generator());
                 authorizationCode = oauthIssuerImpl.authorizationCode();
+                //将生成的授权码放入缓存中（这里使用的是spring cache）
                 oAuthService.addAuthCode(authorizationCode, username);
             }
 
-            //进行OAuth响应构建
+            //4、进行OAuth响应构建，也就是构建响应URL包含回调地址和授权码
             OAuthASResponse.OAuthAuthorizationResponseBuilder builder =
                     OAuthASResponse.authorizationResponse(request, HttpServletResponse.SC_FOUND);
             //设置授权码
@@ -94,6 +98,7 @@ public class AuthorizeController {
 
             //根据OAuthResponse返回ResponseEntity响应
             HttpHeaders headers = new HttpHeaders();
+            //此时得到的location就是合成了回调地址与授权码的地址
             headers.setLocation(new URI(response.getLocationUri()));
             return new ResponseEntity(headers, HttpStatus.valueOf(response.getResponseStatus()));
         } catch (OAuthProblemException e) {
