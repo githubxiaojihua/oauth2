@@ -36,14 +36,15 @@ public class Oauth2Filter implements Filter{
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletResponse res = (HttpServletResponse) response;
         try {
-            //构建OAuth资源请求
+            //1、根据普通request请求构建OAuth资源请求(从请求串中获取参数)
             OAuthAccessResourceRequest oauthRequest = new OAuthAccessResourceRequest((HttpServletRequest) request, ParameterStyle.QUERY); // queryString 方式获取参数
-
+            //从header中获取参数
             // OAuthAccessResourceRequest oauthRequest = new OAuthAccessResourceRequest((HttpServletRequest) request, ParameterStyle.HEADER); // 从HttpHead头中获取参数
 
+            //2、获取accessToken
             String accessToken = oauthRequest.getAccessToken();
 
-            //验证Access Token
+            //3、验证Access Token
             if (!checkAccessToken(accessToken)) {
                 // 如果不存在/过期了，返回未验证错误，需重新验证
                 oAuthFaileResponse(res);
