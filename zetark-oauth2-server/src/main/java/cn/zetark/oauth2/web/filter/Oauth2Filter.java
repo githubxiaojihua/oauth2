@@ -91,6 +91,7 @@ public class Oauth2Filter implements Filter{
      * @throws IOException
      */
     private boolean checkAccessToken(String accessToken) throws IOException {
+        //使用java.net包下的URL与HttpURLConnection发送http请求调用AccessTokenController的checkAccessToken方法来验证token
         URL url = new URL(Constants.CHECK_ACCESS_CODE_URL+accessToken);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("POST");

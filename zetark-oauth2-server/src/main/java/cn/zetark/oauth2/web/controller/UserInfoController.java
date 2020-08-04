@@ -73,11 +73,11 @@ public class UserInfoController {
      */
     private HttpEntity checkAccessToken(HttpServletRequest request) throws OAuthSystemException {
         try {
-            //构建OAuth资源请求
+            //1、根据普通request请求构建OAuth资源请求
             OAuthAccessResourceRequest oauthRequest = new OAuthAccessResourceRequest(request, ParameterStyle.QUERY);
-            //获取Access Token
+            //2、获取Access Token
             String accessToken = oauthRequest.getAccessToken();
-            //验证Access Token
+            //3、验证Access Token
             if (!oAuthService.checkAccessToken(accessToken)) {
                 // 如果不存在/过期了，返回未验证错误，需重新验证
                 OAuthResponse oauthResponse = OAuthRSResponse
@@ -93,7 +93,7 @@ public class UserInfoController {
                 Gson gson = new GsonBuilder().create();
                 return new ResponseEntity(gson.toJson(status), responseHeaders ,HttpStatus.UNAUTHORIZED);
             }
-            //获取用户名
+            //4、token验证成功后获取用户名并返回
             String username = oAuthService.getUsernameByAccessToken(accessToken);
             User user = userService.findByUsername(username);
             Gson gson = new GsonBuilder().create();

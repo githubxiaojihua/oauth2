@@ -15,6 +15,7 @@ import java.util.Map;
 
 /**
  * Created by Administrator on 2015/5/29.
+ * 使用java原生API进行http请求，来模拟客户端。
  */
 public class UrlClient {
 

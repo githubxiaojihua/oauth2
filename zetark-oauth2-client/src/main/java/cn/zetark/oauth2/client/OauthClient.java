@@ -22,6 +22,10 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+/**
+ * 使用resteasy来发送http请求，来模拟客户端
+ * 使用了OauthClient的api,OAuthClientRequest,OAuthClient,OAuthAccessTokenResponse
+ */
 public class OauthClient {
 
     /**
