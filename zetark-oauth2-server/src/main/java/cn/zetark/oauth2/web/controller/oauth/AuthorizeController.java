@@ -86,6 +86,7 @@ public class AuthorizeController {
             }
 
             //4、进行OAuth响应构建，也就是构建响应URL包含回调地址和授权码
+            //HttpServletResponse.SC_FOUND:302代表着重定向
             OAuthASResponse.OAuthAuthorizationResponseBuilder builder =
                     OAuthASResponse.authorizationResponse(request, HttpServletResponse.SC_FOUND);
             //设置授权码

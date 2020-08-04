@@ -91,7 +91,8 @@ public class AccessTokenController {
             //生成token后存入到缓存中
             oAuthService.addAccessToken(accessToken, oAuthService.getUsernameByAuthCode(authCode));
 
-            //7、生成OAuth响应，设置好token的过期时间
+            //7、生成OAuth响应，设置好token的过期时间，注意最后是buildJSONmessage,
+            //生成的是json
             OAuthResponse response = OAuthASResponse
                     .tokenResponse(HttpServletResponse.SC_OK)
                     .setAccessToken(accessToken)
