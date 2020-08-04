@@ -36,7 +36,7 @@ public class Oauth2Filter implements Filter{
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletResponse res = (HttpServletResponse) response;
         try {
-            //1、根据普通request请求构建OAuth资源请求(从请求串中获取参数)
+            //1、根据普通request请求构建OAuth资源请求(从请求串中获取参数)从请求参数串中查询相关数据，也可以从请求头和body中查询
             OAuthAccessResourceRequest oauthRequest = new OAuthAccessResourceRequest((HttpServletRequest) request, ParameterStyle.QUERY); // queryString 方式获取参数
             //从header中获取参数
             // OAuthAccessResourceRequest oauthRequest = new OAuthAccessResourceRequest((HttpServletRequest) request, ParameterStyle.HEADER); // 从HttpHead头中获取参数
